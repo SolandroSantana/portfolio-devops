@@ -1,0 +1,32 @@
+services:
+  database-admin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - '5050:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: solandro.sousa@rodcar.com.br
+      PGADMIN_DEFAULT_PASSWORD: postgres
+  database:
+    depends_on:
+      - database-admin
+    image: postgres
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  api-server:
+    depends_on:
+      - database
+    image: solandrosousa/api-node:1.0
+    working_dir: /app
+    ports:
+      - "3000:3000"
+
+
+  
