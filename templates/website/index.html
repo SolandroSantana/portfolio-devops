@@ -1,0 +1,99 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Tabela Periodica no Bolso{% endblock %}
+
+{% block maincontent %}
+
+    <style>
+        .element-card {
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+            background-color: #f8f9fa;
+        }
+        .element-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .element-symbol {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .element-number {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+    </style>
+    <!-- Navbar -->
+
+
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Tabela Periódica Interativa</h1>
+        <div class="row mb-4">
+            <!-- Campo de busca -->
+            <div class="col-md-6 mx-auto">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar elemento...">
+            </div>
+        </div>
+
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4" id="elementGrid">
+            <!-- Lista de elementos -->
+            {% for element in elements %}
+                <div class="col">
+                    <div class="card element-card p-3 text-center" onclick="showElementDetails('{{ element.nome }}', '{{ element.simbolo }}', '{{ element.numero_atomico }}', '{{ element.massa_atomica }}', '{{ element.propriedades }}', '{{ element.descricao }}')" data-bs-toggle="modal" data-bs-target="#elementModal">
+                        <div class="element-symbol">{{ element.simbolo }}</div>
+                        <div class="element-number">{{ element.numero_atomico }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Modal para exibir detalhes do elemento -->
+    <div class="modal fade" id="elementModal" tabindex="-1" aria-labelledby="elementModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="elementModalLabel">Detalhes do Elemento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nome:</strong> <span id="modalElementName"></span></p>
+                    <p><strong>Símbolo:</strong> <span id="modalElementSymbol"></span></p>
+                    <p><strong>Número Atômico:</strong> <span id="modalElementNumber"></span></p>
+                    <p><strong>Massa Atômica:</strong> <span id="modalElementMass"></span></p>
+                    <p><strong>Propriedades:</strong> <span id="modalElementProperties"></span></p>
+                    <p><strong>Descrição:</strong> <span id="modalElementDescription"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para mostrar detalhes do elemento
+        function showElementDetails(name, symbol, number, mass, properties, description) {
+            document.getElementById('modalElementName').textContent = name;
+            document.getElementById('modalElementSymbol').textContent = symbol;
+            document.getElementById('modalElementNumber').textContent = number;
+            document.getElementById('modalElementMass').textContent = mass;
+            document.getElementById('modalElementProperties').textContent = properties;
+            document.getElementById('modalElementDescription').textContent = description;
+        }
+
+        // Função de busca de elementos
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const elementItems = document.querySelectorAll('#elementGrid .element-card');
+            elementItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchValue) ? '' : 'none';
+            });
+        });
+    </script>
+
+
+{% endblock %}

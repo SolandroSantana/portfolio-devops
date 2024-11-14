@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:17.0-alpine3.20
+    container_name: periodic_table_db
+    environment:
+      POSTGRES_DB: periodic_table-db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: periodic_table_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: solandro.contato@hotmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
